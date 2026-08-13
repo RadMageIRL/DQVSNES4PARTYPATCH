@@ -1,0 +1,60 @@
+MIT License
+
+Copyright (c) 2026 RadMageIRL
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+-------------------------------------------------------------------------
+SCOPE OF THE ABOVE, AND ORIGIN OF THE PATCH CONTENT
+-------------------------------------------------------------------------
+
+The MIT terms above apply to the original work in this repository:
+
+  build.py
+  README.md
+  docs/ANALYSIS.md
+  the screenshots
+
+They do NOT purport to license the modifications encoded in the patch files
+themselves:
+
+  dq5-4party-dejap-fixed-v1.bps
+  dq5-4party-dejap-fixed-v1.ips
+
+Those patches carry the substance of the original Japanese four-party hack by
+Mr. 45, released in 2007 ("DQ5 4-person party beta", ver 1.4) and available at
+https://w.atwiki.jp/dq_binary/pages/31.html . The contribution made here is a
+correction to how that work was aligned when converted to the DeJap English
+translation, together with a decision to omit six Japanese-layout menu edits.
+That correction does not make the underlying hack anyone else's work.
+
+Mr. 45 released his hack freely to the romhacking community. These corrected
+patches are distributed in the same spirit: freely, at no charge, for people
+who own the game. If Mr. 45 or any rights holder objects to this distribution,
+it will be taken down on request.
+
+An intermediate conversion of that hack to the DeJap translation was released
+in 2022 by AustNerevar. No code or patch data from that release is reproduced
+here; it was used only as a subject of comparison in diagnosing the alignment
+error described in docs/ANALYSIS.md.
+
+NO ROM DATA IS INCLUDED OR DISTRIBUTED IN THIS REPOSITORY. The patches contain
+only the differences between two ROM images, and cannot be used without a copy
+of the game that you provide yourself.

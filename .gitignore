@@ -1,0 +1,39 @@
+# ============================================================
+# NO ROMs. Ever. Patches only.
+# ============================================================
+*.sfc
+*.smc
+*.fig
+*.swc
+*.srm
+*.srm.bak
+*.sav
+*.st[0-9]
+*.mmo
+*.bst
+
+# build intermediates from the analysis (numbered stage files)
+[0-9][0-9]_*
+out*.sfc
+DQ5-4party*.sfc
+
+# DeJap's translation patch is not ours to redistribute
+DQ5E.IPS
+DQ5E.ips
+
+# archives that might contain ROMs
+*.zip
+*.7z
+*.rar
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# editors / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

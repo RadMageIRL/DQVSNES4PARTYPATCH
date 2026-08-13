@@ -1,0 +1,189 @@
+Known issues in the ORIGINAL Japanese 4-party hack, by Mr. 45
+============================================================
+
+Source: "DQ5 4-person party beta" (DQ5 4人パーティーbeta), ver 1.4, 2007-12-07
+        file 問題点.txt ("Problem Points") from the original distribution
+        https://w.atwiki.jp/dq_binary/pages/31.html
+
+These are the author's OWN notes on unresolved problems in his hack. They
+predate this repository entirely and are NOT caused by, and are NOT fixed by,
+the +0x200 alignment correction published here. They are reproduced verbatim
+so users know what they are getting.
+
+Summary of the unresolved issues, in short:
+
+  * Using the magic carpet makes Zenithian Castle disappear. The castle uses
+    sprite slot 0A, but the carpet's shadow was assigned to 0A as well.
+  * Using the Zenithian Bell corrupts the ship graphics. With a fourth party
+    member the sprite budget overruns: a four-member field party with the ship
+    already uses 0x019A sprites, and the dragon occupies 0180-01F8, pushing the
+    total past the SNES hard limit of 512 sprites. Something has to give.
+
+The machine translation below was included by AustNerevar in the 2022 RHDN
+release. The Japanese original follows it, unaltered.
+
+============================================================================
+MACHINE TRANSLATION (DeepL, as distributed with the 2022 release)
+============================================================================
+
+07/12/07 ver.1.4
+032EF8-032F1B: Address group (2h*18, one for 20h)
+0320BF-0320EE: Bianca in the house of Duncan, a village deep in the mountains
+ 43 57 (+0615 = 096C) Message 096C
+07/12/02 ver.1.3
+Fixed a bug in reordering in dungeons with carriages
+(Fix 0x017FE8-0x017FFF)
+07/11/22 ver.1.2
+It seems to have worked.
+Just moved the position of the carpet to 13-15.
+
+*Assumptions
+7E3000 to 7E321 is a block group of floor sprite data, each block contains 32 characters.
+
+ 7E3200-7E321F: offset of image data from 7E8000
+ 7E3220-7E323F: figure
+
+The first few characters are fixed.
+00: Party head
+01: Carriage
+02: Carriage
+03: Party 2
+04: Party 3
+05: Ship
+06: Ship
+07: Sky
+08-1F: General NPC
+
+In the field, 07-09 are carpeted or bells in the sky.
+
+*Extension
+The fourth person is placed at position 05 in the above data.
+00: First person in party
+01: Carriage
+02: Carriage
+03: Second person in party
+04: Third person in party
+05: Party 4
+06: Ship
+07: Ship
+08-1F: General NPC
+
+Here, put a carpet or a sky bell in 08-0A.
+The reason why the NPCs after 08 are not shifted is that this value is specified directly in the floor event.
+
+The problem is that 
+The sky castle disappears when the carpet is used. This is because the castle is using 0A, but the shadow of the carpet is
+0A is used for the castle, but the shadow of the carpet is specified for 0A. It would be better if we could shift all the data only when the field is used, but these data are
+ 0B7862-0B7AFB:(9Byte*74rec)
+ 02: X-coordinate-lower
+ 03: Y-coordinates-lower
+ 06: bit0 X-coordinate high
+     bit1 Y-coordinate high
+ The last 11 bits are for the field
+and no free data can be reserved at the bottom. Should the carpet shadows be suppressed? 
+
+When I use the bells in the sky, the graphics of the ship are not correct. 
+There is a process to specify where to put the image data of sprites. 
+In the case of bells in the sky, 
+00C066 A2 00 78
+00C076 A2 00 7C
+00C0FA A2 80 01
+which corresponds to 0x6000+0x180*0x10=7800.
+However, it is unclear where the data is actually written. 
+Now that we have added the fourth member of the party, the above values are
+00C066 A2 00 7C
+00C076 A2 00 80
+00C0FA A2 C0 01
+I thought that I should have added "00C066 A2 00 7C 00C076 A2 00 80 00C0FA A2 C0 01", but after 8000, the map is distorted as if it were an image of the map. 
+When checking the sprite usage, the value of A register at 0FD1E3 indicates the number of sprites to be used.
+(From this point, we can see that the number of sprites used by a party character is fixed at 48.)
+For the number of sprites used by each sprite, see 0FD787 (by Sonitown).
+When a 4-person party is placed to the ship in the field, 0x019A sprites are already used, 
+Therefore, it is impossible to place sprites from the 0x0180th piece as shown above when using the bell in the sky.
+Since the number of sprites used by the dragon is from 0180 to 01F8 in 7E8490 and after, the number of sprites used by a 4-person party would exceed the limit value of 512.
+The number of sprites used by a party of four would exceed the limit of 512 sprites, so one of the sprites must be sacrificed.
+
+
+Translated with www.DeepL.com/Translator (free version)
+
+
+============================================================================
+ORIGINAL JAPANESE (問題点.txt, verbatim)
+============================================================================
+
+07/12/07 ver.1.4
+032EF8-032F1B:アドレス群(2h*18, ひとつ20h分)
+0320BF-0320EE: 山奥の村ダンカンの家のビアンカ
+ 43 57 (+0615 = 096C) メッセージ096C
+07/12/02 ver.1.3
+馬車つきダンジョンでの並び替え時のバグを修正
+(0x017FE8-0x017FFFの修正)
+07/11/22 ver.1.2
+うまくいった気がする.
+じゅうたんの位置を13-15に移しただけ.
+
+*前提
+7E3000からがフロアのスプライトのデータのブロック群で, 各ブロックに32キャラ分.
+
+ 7E3200-7E321F: 7E8000からの画像データのオフセット
+ 7E3220-7E323F: 姿
+
+最初の数キャラは決まっている.
+00: パーティー先頭
+01: 馬車
+02: 馬車
+03: パーティー2人目
+04: パーティー3人目
+05: 船
+06: 船
+07: 空
+08-1F: 一般のNPC
+
+フィールドでは07-09にじゅうたんまたは天空のベルが入る.
+
+*拡張
+上記データの05の位置に4人目を入れる.
+00: パーティー先頭
+01: 馬車
+02: 馬車
+03: パーティー2人目
+04: パーティー3人目
+05: パーティー4人目
+06: 船
+07: 船
+08-1F: 一般のNPC
+
+ここで08-0Aにじゅうたんまたは天空のベルを入れる.
+08以降のNPCをずらさないのはフロアイベントの時直接この値を指定しているため.
+
+問題点として, 
+・じゅうたんを使用すると天空城が消える. これは天空城が0Aを使用しているのに
+0Aにじゅうたんの影を指定したため. フィールドの時だけ全部ずらせられればいいのだが, これらのデータは
+ 0B7862-0B7AFB:(9Byte*74rec)
+ 02: X座標下位
+ 03: Y座標下位
+ 06: bit0 X座標上位
+     bit1 Y座標上位
+ 最後の11個がフィールド用
+にあって下に空きデータを確保できない. 従ってじゅうたんの影を表示しないようにするべきか. 
+
+・天空のベルを使用すると船のグラフィックがおかしくなる. 
+スプライトの画像データをどこに入れるかを指定する処理が存在する. 
+天空のベルの場合, 
+00C066	A2 00 78
+00C076	A2 00 7C
+00C0FA	A2 80 01
+であり, 0x6000+0x180*0x10=7800 という対応になっている.
+ただし, 実際どこにデータを書き込んでいるかが不明. 
+パーティーの4人目を追加したから上の値たちを
+00C066	A2 00 7C
+00C076	A2 00 80
+00C0FA	A2 C0 01
+にすればいいのかと思いきや, 8000以降はマップの画像らしくマップが乱れてしまう. 
+スプライトの使用状況を調べる場合, 0FD1E3でのAレジスタの値が使用するスプライトの枚数を表している.
+(ここから追っていくとパーティーキャラの使用枚数は48枚固定であることがわかる)
+各スプライトの使用枚数は0FD787を参照(by ソニタウン).
+4人パーティーを使ってフィールドで船まで配置した時点ですでに0x019A枚使用しているので, 
+天空のベル使用時に上のように0x0180枚目からスプライトを配置するのは無理とわかる.
+7E8490以降を見ると竜は0180-01F8まで使用しているから, 4人パーティーだとスプライトの使用枚数が
+限界値の512枚を超えてしまうのでスプライトのどれかが犠牲にならなくてはならない.

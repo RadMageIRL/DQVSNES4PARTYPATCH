@@ -273,8 +273,9 @@ dq5-4party-dejap-fixed-v1.bps       the patch (preferred - validates source)
 dq5-4party-dejap-fixed-v1.ips       same patch, IPS format (no validation)
 docs/ANALYSIS.md                    full diagnosis of the +0x200 misalignment
 docs/known-issues.txt               Mr. 45's original notes, JP + translation
-screenshots/                        four-member battle, party roster, and the
+screenshots/                        four-member battle, party roster, the
                                     bell/castle sprite-viewer evidence
+                                    and an example running the patch in ps
 ```
 
 ---

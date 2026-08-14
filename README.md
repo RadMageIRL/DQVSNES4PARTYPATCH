@@ -148,7 +148,8 @@ Verified on the final build (`8FEDE6AC`), on **Mesen 2.1.1** and
   combat resolves cleanly
 
 Also checked on a late-game save: the Zenithian Bell summons the dragon on the
-world map and renders correctly.
+world map and renders correctly, and does so with Zenithian Castle beside it
+without disturbing the castle (see below).
 
 Not yet tested: a full playthrough. This has not been played to completion, and
 the sprite-budget issue Mr. 45 documented (below) is unresolved upstream. Bug
@@ -202,18 +203,24 @@ The item survives in his problems list because that list sits *below* the
 changelog in the same file and predates it - see the note at the top of
 [docs/known-issues.txt](docs/known-issues.txt).
 
-### Untested: the bell and the castle
+### The bell and the castle: tested, does not occur
 
-One possibility worth recording, **not established as fact**. In the unmodified
-game the carpet and the Zenithian Bell share slots `07-09`, so nothing touched
-`0A`. After Mr. 45's changes the carpet moved to `13-15` but the bell shifted to
-`08-0A` - and `0A` is the slot Zenithian Castle uses. The collision may have
-migrated from the carpet to the bell rather than being eliminated.
+There was a reasonable theory that the slot collision had simply *moved*. In the
+unmodified game the carpet and the Zenithian Bell share slots `07-09`, so nothing
+touched `0A`. After Mr. 45's changes the carpet sits at `13-15` but the bell
+shifted to `08-0A` - and `0A` is the slot Zenithian Castle uses. On paper the
+castle should vanish when the dragon is summoned near it.
 
-Mr. 45 documented a bell problem but attributed it to the sprite budget, not the
-castle. **This has not been reproduced or ruled out in either direction.** If
-anyone can park Zenithian Castle somewhere reachable and summon the dragon
-nearby, that observation would settle it - please open an issue either way.
+**It does not. This was tested directly and does not reproduce.**
+
+With a save parked immediately beside Zenithian Castle, using the Zenithian Bell
+summons the dragon with **both the castle and the dragon sprites co-resident in
+OAM**. The castle renders intact - no eviction, no corruption. Mesen's sprite
+viewer confirms the castle's tile data is still loaded and visible while the
+dragon is active (sprite index 29, tile `$43`, palette 3).
+
+So the carpet fix did not displace the problem onto the bell. Both vehicles
+coexist with the castle.
 
 ### Deliberate omission
 

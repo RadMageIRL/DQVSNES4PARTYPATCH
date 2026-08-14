@@ -210,15 +210,29 @@ single `.txt` in these distributions is often several documents concatenated
 with no separator, in more than one chronological direction at once. Read it
 top-down before treating any of it as current.
 
-There is a loose end. In the unmodified game the carpet and the Zenithian Bell
-share slots `07-09`, so nothing touched `0A`. After the hack the carpet sits at
-`13-15`, but the bell shifted to `08-0A` - and `0A` is the castle's slot. The
-collision may have migrated from the carpet to the bell rather than being
-eliminated. Mr. 45 documented a bell problem but attributed it to the sprite
-budget. This is **untested in both directions** and is recorded here as a
-possibility, not a finding. If it is ever confirmed, the remedy is already
-demonstrated: relocate the bell's slots exactly as he relocated the carpet's,
-at the sites `$01:C18C`, `$01:C192` and `$01:C348`.
+One obvious follow-up question, since resolved. The carpet fix could plausibly
+have *moved* the collision rather than removed it: in the unmodified game the
+carpet and the Zenithian Bell share slots `07-09`, so nothing touched `0A`,
+whereas after the hack the carpet sits at `13-15` but the bell shifted to
+`08-0A` - and `0A` is the castle's slot. By static reading, summoning the dragon
+beside Zenithian Castle should evict the castle.
+
+**Tested directly: it does not.** With a save parked immediately beside
+Zenithian Castle, the Zenithian Bell summons the dragon with both the castle and
+the dragon sprites co-resident in OAM. The castle renders intact, no eviction
+and no corruption, and Mesen's sprite viewer confirms the castle's tile data
+still loaded and visible while the dragon is active (sprite index 29, tile
+`$43`, palette 3).
+
+The static slot-number argument was sound but incomplete: sharing a slot number
+in these tables evidently does not force contention under the conditions the
+castle and the dragon actually coexist in. Worth remembering as a caution
+against treating a slot-map overlap as proof of a bug without observing it.
+
+For reference, the bell's three slot assignments are at `$01:C18C`, `$01:C192`
+and `$01:C348` (`LDX #$08`, `#$09`, `#$0A`). Nothing is known to be wrong with
+them; they are recorded because they are the counterpart to the carpet sites
+above and were identified in the course of ruling this out.
 
 ---
 

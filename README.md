@@ -175,6 +175,17 @@ repository, it is not caused by the alignment fix, and it is not fixed by it:
   ship was on screen during dragon flight and looked intact, but that is a
   single observation at one position and is not conclusive.
 
+![The ship on screen during dragon flight, with the sprite viewer's tile table only sparsely populated](screenshots/bell-ship-dragon-flight.png)
+
+**This image is not evidence that the issue is fixed, and should not be read as
+such.** It shows the ship intact while the dragon is active, which is worth
+recording, but the sprite table in this shot is visibly sparser than in the
+castle shot above - the field party sprites had already been unloaded, so the
+sprite budget was not under pressure at this moment. It shows that the ship and
+dragon *can* coexist in an uncontended frame. It does not show what happens when
+the budget is actually saturated, which is the condition Mr. 45 described. The
+issue remains open.
+
 His notes, in the original Japanese and in the machine translation distributed
 with the 2022 release: **[docs/known-issues.txt](docs/known-issues.txt)**.
 
@@ -215,9 +226,14 @@ castle should vanish when the dragon is summoned near it.
 
 With a save parked immediately beside Zenithian Castle, using the Zenithian Bell
 summons the dragon with **both the castle and the dragon sprites co-resident in
-OAM**. The castle renders intact - no eviction, no corruption. Mesen's sprite
-viewer confirms the castle's tile data is still loaded and visible while the
-dragon is active (sprite index 29, tile `$43`, palette 3).
+OAM**. The castle renders intact - no eviction, no corruption.
+
+![Zenithian Castle and the summoned dragon rendering simultaneously, with Mesen's sprite viewer showing both tile sets loaded](screenshots/bell-castle-coresident.png)
+
+Castle and dragon on screen together, with both tile sets resident in the sprite
+viewer. The selected sprite is index 29, tile `$43`, palette 3, marked
+**Visible** - the castle's own tile data, still loaded and still drawing while
+the dragon is active. That is the case that was predicted to fail.
 
 So the carpet fix did not displace the problem onto the bell. Both vehicles
 coexist with the castle.
@@ -242,7 +258,8 @@ dq5-4party-dejap-fixed-v1.bps       the patch (preferred - validates source)
 dq5-4party-dejap-fixed-v1.ips       same patch, IPS format (no validation)
 docs/ANALYSIS.md                    full diagnosis of the +0x200 misalignment
 docs/known-issues.txt               Mr. 45's original notes, JP + translation
-screenshots/                        four-member battle and party roster
+screenshots/                        four-member battle, party roster, and the
+                                    bell/castle sprite-viewer evidence
 ```
 
 ---

@@ -80,6 +80,8 @@ header handling is what broke the original release.
 python build.py "Dragon Quest V - Tenkuu no Hanayome (Japan).sfc" DQ5E.IPS -o DQ5-4party.sfc
 ```
 
+![Four-member battle](screenshots/example_patch_DQ5_4Party.png)
+
 Python 3.8+, standard library only, no installs. Windows, Linux and macOS.
 A headered base ROM is detected and normalised automatically. Run
 `python build.py --help` for details.

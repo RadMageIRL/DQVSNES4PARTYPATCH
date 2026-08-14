@@ -5,19 +5,64 @@ Source: "DQ5 4-person party beta" (DQ5 4人パーティーbeta), ver 1.4, 2007-1
         file 問題点.txt ("Problem Points") from the original distribution
         https://w.atwiki.jp/dq_binary/pages/31.html
 
-These are the author's OWN notes on unresolved problems in his hack. They
-predate this repository entirely and are NOT caused by, and are NOT fixed by,
-the +0x200 alignment correction published here. They are reproduced verbatim
-so users know what they are getting.
+These are the author's OWN notes on his hack. They predate this repository
+entirely and are NOT caused by the +0x200 alignment correction published here.
+They are reproduced verbatim, unedited, because their value is being a faithful
+copy of the source document.
 
-Summary of the unresolved issues, in short:
+  >>> READ THIS FILE TOP-DOWN. The carpet item in the problems list is STALE. <<<
 
-  * Using the magic carpet makes Zenithian Castle disappear. The castle uses
-    sprite slot 0A, but the carpet's shadow was assigned to 0A as well.
-  * Using the Zenithian Bell corrupts the ship graphics. With a fourth party
-    member the sprite budget overruns: a four-member field party with the ship
-    already uses 0x019A sprites, and the dragon occupies 0180-01F8, pushing the
-    total past the SNES hard limit of 512 sprites. Something has to give.
+This file is TWO documents in one: a reverse-chronological CHANGELOG at the top
+(ver 1.4, then 1.3, then 1.2), followed by design notes and a PROBLEMS list.
+The problems list describes the state of the hack BEFORE the changelog entries
+printed above it. Read bottom-up, it reports a bug the author had already fixed.
+
+Specifically, the ver 1.2 entry (2007-11-22) fixes the first problem listed:
+
+    07/11/22 ver.1.2
+    うまくいった気がする.
+    じゅうたんの位置を13-15に移しただけ.
+
+    "I think it worked. Just moved the carpet's position to 13-15."
+
+That is the fix for "using the magic carpet makes Zenithian Castle disappear",
+which happened because the castle uses sprite slot 0A and the carpet's shadow
+had been assigned to 0A as well. Moving the carpet to slots 13-15 puts its
+shadow at 15 and the collision cannot occur.
+
+The fix IS present in the patch published here. Confirmed at six byte sites in
+the shipped ROM, $01:BE12 - $01:BE35:
+
+    LDY #$07 -> #$13      (slot registration, two sites)
+    LDX #$07 -> #$13
+    LDX #$08 -> #$14
+    LDX #$09 -> #$15
+    STA $3227 -> STA $3233        ($3220 + slot: 07 -> 13)
+
+So, of the two problems listed below:
+
+  * MAGIC CARPET vs ZENITHIAN CASTLE - FIXED by the author in ver 1.2, 2007.
+    Not a live bug. Listed below only because the problems list predates it.
+
+  * ZENITHIAN BELL vs SHIP GRAPHICS - still unresolved. This is the SNES
+    512-sprite hardware limit, not a ROM-space problem, so a larger ROM cannot
+    fix it. Partially observed: the dragon summons and renders correctly, and
+    the sprite budget is visibly reallocated (the OAM tile table drops from
+    roughly six populated rows to three and a half as field party sprites are
+    unloaded). The ship looked intact in one observation, which is not
+    conclusive.
+
+UNTESTED POSSIBILITY, recorded but NOT established as fact: in the unmodified
+game the carpet and the bell share slots 07-09, so nothing used 0A. After the
+hack the carpet moved to 13-15 but the bell shifted to 08-0A, and 0A is the
+slot Zenithian Castle uses. The collision may have MIGRATED from the carpet to
+the bell rather than being eliminated. This has not been reproduced or ruled
+out in either direction.
+
+This cost three people the same mistake - the original author's readers, the
+2022 conversion, and this repository's first release - so it is worth stating
+plainly: when a Japanese romhack ships a single .txt, check whether a changelog
+at the top supersedes the problem list at the bottom.
 
 The machine translation below was included by AustNerevar in the 2022 RHDN
 release. The Japanese original follows it, unaltered.

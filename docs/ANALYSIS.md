@@ -166,6 +166,62 @@ correct before trusting it on a patched image.
 
 ---
 
+## Postscript: a bug that was fixed five years before anyone wrote it down
+
+A second finding, unrelated to the alignment error but worth recording, because
+the failure mode is instructive in the same way.
+
+Mr. 45's distribution ships a single `問題点.txt`. It contains a
+reverse-chronological changelog at the top - ver 1.4, then 1.3, then 1.2 -
+followed by design notes and a list of unresolved problems. The first problem
+listed is that the magic carpet makes Zenithian Castle disappear, because the
+castle uses sprite slot `0A` and the carpet's shadow was assigned to `0A`.
+
+The ver 1.2 entry, sitting a few lines *above* that list, reads:
+
+> うまくいった気がする. じゅうたんの位置を13-15に移しただけ.
+> *"I think it worked. Just moved the carpet's position to 13-15."*
+
+That is the fix for the problem described below it. The problems list documents
+the state of the hack *before* the changelog printed above it, and the file
+never says so.
+
+The fix is real and it is in the patch. Six byte sites, `$01:BE12`-`$01:BE35`:
+
+```
+$01:BE13   LDY #$07 -> #$13     slot registration
+$01:BCD1   LDY #$07 -> #$13     slot registration
+$01:BE22   LDX #$07 -> #$13
+$01:BE27   LDX #$08 -> #$14
+$01:BE2C   LDX #$09 -> #$15
+$01:BE36   STA $3227 -> STA $3233        ($3220 + slot: 07 -> 13)
+```
+
+The `STA $3227` -> `STA $3233` is the confirming detail: `$3220` is the
+per-slot appearance table, so the write moves from index `07` to index `13`
+in lockstep with the `LDX` values. The object was relocated wholesale.
+
+Three parties reproduced the stale item as a live bug: readers of the original
+release, the 2022 DeJap conversion, and the first release of this repository.
+Each read the problems list without reading the changelog above it.
+
+The general lesson, for anyone working from Japanese romhack documentation: a
+single `.txt` in these distributions is often several documents concatenated
+with no separator, in more than one chronological direction at once. Read it
+top-down before treating any of it as current.
+
+There is a loose end. In the unmodified game the carpet and the Zenithian Bell
+share slots `07-09`, so nothing touched `0A`. After the hack the carpet sits at
+`13-15`, but the bell shifted to `08-0A` - and `0A` is the castle's slot. The
+collision may have migrated from the carpet to the bell rather than being
+eliminated. Mr. 45 documented a bell problem but attributed it to the sprite
+budget. This is **untested in both directions** and is recorded here as a
+possibility, not a finding. If it is ever confirmed, the remedy is already
+demonstrated: relocate the bell's slots exactly as he relocated the carpet's,
+at the sites `$01:C18C`, `$01:C192` and `$01:C348`.
+
+---
+
 ## Reproducing this analysis
 
 Everything above is static comparison of four ROM images - the Japanese base,

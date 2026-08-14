@@ -147,27 +147,73 @@ Verified on the final build (`8FEDE6AC`), on **Mesen 2.1.1** and
 - **Four-member battle works** - four status windows, all four members act,
   combat resolves cleanly
 
+Also checked on a late-game save: the Zenithian Bell summons the dragon on the
+world map and renders correctly.
+
 Not yet tested: a full playthrough. This has not been played to completion, and
-the late-game sprite issues Mr. 45 documented (below) are unresolved. Bug
+the sprite-budget issue Mr. 45 documented (below) is unresolved upstream. Bug
 reports welcome.
 
 ---
 
 ## Known issues, inherited from the original hack
 
-These are **Mr. 45's own documented issues** with his 2007 hack. They predate
-this repository, they are not caused by the alignment fix, and they are not
-fixed by it:
+This is **Mr. 45's own documented issue** with his 2007 hack. It predates this
+repository, it is not caused by the alignment fix, and it is not fixed by it:
 
-- **The magic carpet makes Zenithian Castle disappear.** The castle uses sprite
-  slot `0A`, but the carpet's shadow was assigned to `0A` as well.
-- **The Zenithian Bell corrupts the ship graphics.** With a fourth member the
+- **The Zenithian Bell may corrupt the ship graphics.** With a fourth member the
   sprite budget overruns: a four-member field party with the ship already uses
   `0x019A` sprites, and the dragon occupies `0180-01F8`, pushing past the SNES
-  hard limit of 512. Something has to be sacrificed.
+  hard limit of 512. Something has to be sacrificed. This is a hardware limit,
+  not a ROM-space problem, so expanding the ROM cannot fix it.
+
+  Partially observed: summoning the dragon on the world map works and renders
+  correctly, and the game visibly reallocates the sprite budget - Mesen's sprite
+  viewer shows the OAM tile table dropping from roughly six populated rows to
+  three and a half as the field party sprites are unloaded to make room. The
+  ship was on screen during dragon flight and looked intact, but that is a
+  single observation at one position and is not conclusive.
 
 His notes, in the original Japanese and in the machine translation distributed
 with the 2022 release: **[docs/known-issues.txt](docs/known-issues.txt)**.
+
+### The carpet / Zenithian Castle issue is NOT a live bug
+
+Mr. 45's problems list also describes the magic carpet making Zenithian Castle
+disappear, because the castle uses sprite slot `0A` and the carpet's shadow was
+assigned to `0A` as well. **He fixed this himself in ver 1.2 (2007-11-22)** and
+the fix is in this patch:
+
+> うまくいった気がする. じゅうたんの位置を13-15に移しただけ.
+> *"I think it worked. Just moved the carpet's position to 13-15."*
+
+Confirmed in the shipped bytes at `$01:BE12`-`$01:BE35`, six sites:
+
+```
+LDY #$07 -> #$13      (slot registration, two sites)
+LDX #$07 -> #$13      LDX #$08 -> #$14      LDX #$09 -> #$15
+STA $3227 -> STA $3233        ($3220 + slot: 07 -> 13)
+```
+
+The carpet occupies slots `13-15`, so its shadow sits at `15`, not `0A`. The
+collision as described cannot occur.
+
+The item survives in his problems list because that list sits *below* the
+changelog in the same file and predates it - see the note at the top of
+[docs/known-issues.txt](docs/known-issues.txt).
+
+### Untested: the bell and the castle
+
+One possibility worth recording, **not established as fact**. In the unmodified
+game the carpet and the Zenithian Bell share slots `07-09`, so nothing touched
+`0A`. After Mr. 45's changes the carpet moved to `13-15` but the bell shifted to
+`08-0A` - and `0A` is the slot Zenithian Castle uses. The collision may have
+migrated from the carpet to the bell rather than being eliminated.
+
+Mr. 45 documented a bell problem but attributed it to the sprite budget, not the
+castle. **This has not been reproduced or ruled out in either direction.** If
+anyone can park Zenithian Castle somewhere reachable and summon the dragon
+nearby, that observation would settle it - please open an issue either way.
 
 ### Deliberate omission
 

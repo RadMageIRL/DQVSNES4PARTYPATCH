@@ -82,6 +82,19 @@ python build.py "Dragon Quest V - Tenkuu no Hanayome (Japan).sfc" DQ5E.IPS -o DQ
 
 ![Four-member battle](screenshots/example_patch_DQ5_4Party.png)
 
+```
+   Directory: E:\code\testpatch
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         8/13/2026   5:22 PM          15127 build.py                             (the python build file)
+-a----         8/13/2026  10:32 PM           2162 dq5-4party-dejap-fixed-v1.bps        (the patch)
+-a----         8/13/2026  10:32 PM        2097152 DQ5-4party.sfc                       (the resulting usable patched game)
+-a----         8/13/2026   2:51 PM         286391 DQ5E.IPS                             (dejap translation patch)
+-a----         8/13/2026   2:49 PM        1572864 Dragon Quest V - Tenkuu no Hanayome  (Japan).sfc  (original dq5jp)
+
+```
 Python 3.8+, standard library only, no installs. Windows, Linux and macOS.
 A headered base ROM is detected and normalised automatically. Run
 `python build.py --help` for details.

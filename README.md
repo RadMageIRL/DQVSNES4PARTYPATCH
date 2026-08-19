@@ -116,6 +116,26 @@ validation is a direct contributor to the bug this repository fixes.
 
 ---
 
+## After patching: how to get the fourth party member
+
+The fourth slot is not automatic. When a fourth member joins, the party
+will still show three until you arrange them.
+
+Open the menu, go to **Tactics**, then **Order**, and arrange all four
+members. The count may still read three on that screen - check again
+afterwards, and on the overworld, and it will show four.
+
+Members sitting in the wagon are held separately from the active party.
+Someone in the wagon will not appear in your line-up until you order
+them in.
+
+This is how the hack works, not a sign that something went wrong.
+
+**Checking your patch worked.** `9400CB3C` is the ROM you apply the patch
+**to** - the DeJap v2.01 build. The patched file should read `8FEDE6AC`.
+If you check the hash before patching you will see `9400CB3C` and think
+something is wrong; check the file the patcher gave you back.
+
 ## What was wrong with the original
 
 Mr. 45's patch is written against a headerless ROM. Applying it to a *headered*
